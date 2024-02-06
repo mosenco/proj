@@ -6,9 +6,6 @@ table=readtable("erogato slovenia 1.xls");
 %eliminazione valori nulli per MAPD che non funziona con zeri
 table=table(table.erogato>0,:);
 
-%deseasonalisation time series 
-table.erogato=trenddecomp(table.erogato);
-
 table_1 = table(table.codice_pv==1,:);
 table_2 = table(table.codice_pv==2,:);
 table_3 = table(table.codice_pv==3,:);
@@ -281,12 +278,11 @@ end
 % plot all data
 for i=1:12
     PlotControlChart(tables{i},mm7{i}',mm4{i}',mexp{i}',seven_y_predict{i}',1,0.5);
-    
 end
-PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd,mexp_mse,mexp_mapd,alpha_opt,regr7_mse,regr7_mapd)
+
 
 %%
-function PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd,mexp_mse,mexp_mapd,alpha_opt,regr7_mse,regr7_mapd)
+function PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd)
     figure;
 
     subplot(5,1,1);
@@ -303,8 +299,7 @@ function PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd,me
 
     subplot(5,1,4);
     bar(mexp_mse);
-    title("media esponenziale alpha MSE");
-    set(gca, 'XTickLabel', alpha_opt);
+    title("media esponenziale alpha: "+alpha_opt+" MSE");
 
     subplot(5,1,5);
     bar(regr7_mse);
@@ -326,8 +321,7 @@ function PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd,me
 
     subplot(5,1,4);
     bar(mexp_mapd);
-    title("media esponenziale alpha MAPD");
-    set(gca, 'XTickLabel', alpha_opt);
+    title("media esponenziale alpha: "+alpha_opt+" MAPD");
 
     subplot(5,1,5);
     bar(regr7_mapd);

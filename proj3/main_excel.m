@@ -202,7 +202,7 @@ mexp_mapd_raw = cell(1,12);
 mexp_mse=[];
 mexp_mapd=[];
 alpha=[0:0.1:1]; %tutti possibili valori di alpha, faccio grids
-alpha_opt=0;
+alpha_opt=cell(1,12);
 
 for i=1:12
 
@@ -230,7 +230,7 @@ for i=1:12
             mexp_mapd(i) = temp_mapd;
             
             mexp{i}=temp_mexp;
-            alpha_opt=alpha(a);
+            alpha_opt{i}=alpha(a);
 
         elseif temp_mse < mexp_mse(i)
             mexp_mse_raw{i} = temp_mse_raw;
@@ -240,7 +240,7 @@ for i=1:12
             mexp_mapd(i) = temp_mapd;
             
             mexp{i}=temp_mexp;
-            alpha_opt=alpha(a);
+            alpha_opt{i}=alpha(a);
         end
         disp(a+" / "+i);
         disp(temp_mse);
@@ -276,9 +276,62 @@ end
 
 %%
 % plot all data
-PlotControlChart(table_6,mm7{6}',mm4{6}',mexp{6}',seven_y_predict{6}',1,0.5);
+for i=1:12
+    PlotControlChart(tables{i},mm7{i}',mm4{i}',mexp{i}',seven_y_predict{i}',1,0.5);
+    
+end
+PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd,mexp_mse,mexp_mapd,alpha_opt,regr7_mse,regr7_mapd)
 
 %%
+function PlotMSEMAPD(tec_el_mse,tec_el_mapd,mm7_mse,mm7_mapd,mm4_mse,mm4_mapd,mexp_mse,mexp_mapd,alpha_opt,regr7_mse,regr7_mapd)
+    figure;
+
+    subplot(5,1,1);
+    bar(tec_el_mse);
+    title('tecnica elementare MSE');
+    
+    subplot(5,1,2);
+    bar(mm7_mse);
+    title("media mobile 7 MSE");
+
+    subplot(5,1,3);
+    bar(mm4_mse);
+    title("media mobile 4 MSE");
+
+    subplot(5,1,4);
+    bar(mexp_mse);
+    title("media esponenziale alpha MSE");
+    set(gca, 'XTickLabel', alpha_opt);
+
+    subplot(5,1,5);
+    bar(regr7_mse);
+    title("regressione lineare MSE");
+
+    figure;
+
+    subplot(5,1,1);
+    bar(tec_el_mapd);
+    title('tecnica elementare MAPD');
+    
+    subplot(5,1,2);
+    bar(mm7_mapd);
+    title("media mobile 7 MAPD");
+
+    subplot(5,1,3);
+    bar(mm4_mapd);
+    title("media mobile 4 MAPD");
+
+    subplot(5,1,4);
+    bar(mexp_mapd);
+    title("media esponenziale alpha MAPD");
+    set(gca, 'XTickLabel', alpha_opt);
+
+    subplot(5,1,5);
+    bar(regr7_mapd);
+    title("regressione lineare MAPD");
+end
+
+
 function PlotControlChart(table,mm7,mm4,mexp,seven_y_predict,thic,thicc)
     figure;
     %hold on;
@@ -292,6 +345,7 @@ function PlotControlChart(table,mm7,mm4,mexp,seven_y_predict,thic,thicc)
     plot(1:length(table.erogato), table.erogato, 'b-', 'LineWidth', thic);
     plot(2:length(table.erogato), table.erogato(2:end), 'r--', 'LineWidth', thicc);
     hold off;
+    title("tecnica elementare");
 
     %plot media mobile 7
     subplot(5, 1, 2);
@@ -299,6 +353,7 @@ function PlotControlChart(table,mm7,mm4,mexp,seven_y_predict,thic,thicc)
     plot(1:length(table.erogato), table.erogato, 'b-', 'LineWidth', thic);
     plot(1:length(table.erogato), mm7, 'g--', 'LineWidth', thicc);
     hold off;
+    title("media mobile 7");
 
     %plot media mobile 4 settimane
     subplot(5, 1, 3);
@@ -306,6 +361,7 @@ function PlotControlChart(table,mm7,mm4,mexp,seven_y_predict,thic,thicc)
     plot(1:length(table.erogato), table.erogato, 'b-', 'LineWidth', thic);
     plot(29:length(table.erogato), mm4(1:end-6), 'm--', 'LineWidth', thicc);
     hold off;
+    title("media mobile 4 weeks");
 
     %plot media esponenziale
     subplot(5, 1, 4);
@@ -313,6 +369,7 @@ function PlotControlChart(table,mm7,mm4,mexp,seven_y_predict,thic,thicc)
     plot(1:length(table.erogato), table.erogato, 'b-', 'LineWidth', thic);
     plot(1:length(table.erogato), mexp(1:end), 'c--', 'LineWidth', thicc);
     hold off;
+    title("media esponenziale");
 
     %plot linear regression 7
     subplot(5, 1, 5);
@@ -320,6 +377,7 @@ function PlotControlChart(table,mm7,mm4,mexp,seven_y_predict,thic,thicc)
     plot(1:length(table.erogato), table.erogato, 'b-', 'LineWidth', thic);
     plot(8:length(table.erogato), seven_y_predict(1:end), 'm--', 'LineWidth', thicc);
     hold off;
+    title("linear regression");
 end
 
 function result = SumSameDateErogato(table)
