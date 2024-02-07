@@ -275,8 +275,51 @@ for i=1:12
 end
 
 %%
+% dato destagionalizzato con media mobile 7
+table_dest = trenddecomp(table_7.erogato);
+
+mm7_mse_raw_dest=[];
+mm7_mapd_raw_dest=[];
+mm7_mse_dest=[];
+mm7_mapd_dest=[];
+
+mm7_dest = movmean(table_dest,7);
+for j=1:length(mm7_dest)
+    mm7_mse_raw_dest=[mm7_mse_raw_dest mse(table_dest(j),mm7_dest(j))];
+    mm7_mapd_raw_dest=[mm7_mapd_raw_dest mape(table_dest(j),mm7_dest(j))];
+end
+mm7_mse_dest= sum(mm7_mse_raw_dest)/length(mm7_mse_raw_dest);
+mm7_mapd_dest= sum(mm7_mapd_raw_dest)/length(mm7_mapd_raw_dest);
+
+figure;
+subplot(4,1,1);
+bar(mm7_mse_dest);
+title("mse destagionalizzato");
+
+subplot(4,1,2);
+bar(mm7_mapd_dest);
+title("mapd destagionalizzato");
+
+
+subplot(4, 1, 3);
+hold on;
+
+plot(1:length(table_dest), table_dest, 'b-', 'LineWidth', 1);
+plot(1:length(table_dest), mm7_dest, 'g--', 'LineWidth', 0.7);
+hold off;
+title("media mobile 7 dest");
+
+subplot(4, 1, 4);
+hold on;
+plot(1:length(table_7.erogato), table_7.erogato, 'r-', 'LineWidth', 1);
+plot(1:length(table_dest), table_dest, 'b-', 'LineWidth', 1);
+
+hold off;
+title("orig vs dest");
+
+%%
 % plot all data
-for i=1:12
+for i=7:7
     PlotControlChart(tables{i},mm7{i}',mm4{i}',mexp{i}',seven_y_predict{i}',1,0.5);
     
 end

@@ -7,7 +7,7 @@ table=readtable("erogato slovenia 1.xls");
 table=table(table.erogato>0,:);
 
 %deseasonalisation time series 
-table.erogato=trenddecomp(table.erogato);
+%table.erogato=trenddecomp(table.erogato);
 
 table_1 = table(table.codice_pv==1,:);
 table_2 = table(table.codice_pv==2,:);
