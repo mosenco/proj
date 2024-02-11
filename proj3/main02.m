@@ -42,7 +42,7 @@ demandHistory=[
 7	4	6	3	6	3    
 
 
-]
+];
 % maximum level policy
 
 % As tested, i serve 1 PV per day, delivering all 39 i can, till the max is
