@@ -81,7 +81,7 @@ table_10_sum = SumSameDateErogato(table_10_fix);
 
 
 PV_sum=cell(1,5);
-PV_sum{1}=table_6_sum;
+PV_sum{1} = table_6_sum;
 PV_sum{2} = table_7_sum;
 PV_sum{3} = table_8_sum;
 PV_sum{4} = table_9_sum;

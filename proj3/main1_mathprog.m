@@ -148,15 +148,15 @@ solver.Constraints.cons4 = InventoryStart;
 %livello inventario aggiornato giornalmente da consegna o consumo, deve
 %essere maggiore o uguale a zero. mai negativo. non per forza bisogna
 %consegnare ogni giorno
-% InventoryNoNegative = optimconstr();
-% count=1;
-% for i = 1:days
-%     for j = 1:nodes
-%         InventoryNoNegative(count) = s(j,i)>=0;
-%         count=count+1;
-%     end
-% end
-% solver.Constraints.cons5 = InventoryNoNegative;
+InventoryNoNegative = optimconstr();
+count=1;
+for i = 1:days
+    for j = 1:nodes
+        InventoryNoNegative(count) = s(j,i)>=0.1;
+        count=count+1;
+    end
+end
+solver.Constraints.cons5 = InventoryNoNegative;
 %COMMENTATO PERCHE GIA DEFINITO DA VARIABILE SOPRA
 
 %inventario cambia giornalmente
@@ -164,7 +164,7 @@ InventoryDaily = optimconstr();
 count=1;
 for i = 2:days
     for j = 2:nodes
-        InventoryDaily(count) = s(j,i)==s(j,i-1)-demandHistory(i,j-1)+d(j,i);
+        InventoryDaily(count) = s(j,i)==s(j,i-1)-demandHistory(i-1,j-1)+d(j,i-1);
         count=count+1;
     end
 end
@@ -175,7 +175,7 @@ InventoryMax = optimconstr();
 count=1;
 for i = 1:days
     for j = 2:nodes
-        InventoryMax(count) = s(j,i)==capacity_PV;
+        InventoryMax(count) = s(j,i)<=capacity_PV;
         count=count+1;
     end
 end
